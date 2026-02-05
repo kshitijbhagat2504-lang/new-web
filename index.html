@@ -86,14 +86,14 @@
 </div>
 
 <div class="final" id="final">
-  <img src="final.jpg" />
+  <img src="final.png" />
   <h1>Will you be my Valentine? ❤️</h1>
   <button>Yes 💕</button>
 </div>
 
 <script>
   // 18 unique images → duplicated = 36 cards
-  const images = Array.from({ length: 18 }, (_, i) => `${i + 1}.jpg`);
+  const images = Array.from({ length: 18 }, (_, i) => `${i + 1}.jpeg`);
   const cards = [...images, ...images].sort(() => Math.random() - 0.5);
 
   // Heart shape map (1 = card, 0 = empty)
@@ -156,3 +156,4 @@
 
 </body>
 </html>
+
