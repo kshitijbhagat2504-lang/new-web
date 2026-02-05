@@ -1,60 +1,68 @@
 <script>
+  // card image filenames
   const images = Array.from({ length: 18 }, (_, i) => `${i + 1}.jpeg`);
   const cards = [...images, ...images].sort(() => Math.random() - 0.5);
 
+  // heart pattern — this array must have >36 ones OR include zero placeholders
   const heartMap = [
     0,1,1,0,1,1,0,
     1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,
     0,1,1,1,1,1,0,
-    0,1,1,1,1,1,0
-  ]; // EXACTLY 36 ONES
+    0,0,1,1,1,0,0
+  ];
 
   const grid = document.getElementById("grid");
   let flipped = [];
   let matched = 0;
-  let cardIndex = 0;
 
-  heartMap.forEach(cell => {
-    if (cell === 0) {
-      const spacer = document.createElement("div");
-      spacer.style.visibility = "hidden";
-      grid.appendChild(spacer);
-    } else {
-      const img = cards[cardIndex++];
+  // only put card where heartMap[i] is 1
+  let cardIdx = 0;
+  for (let i = 0; i < heartMap.length; i++) {
+    if (heartMap[i] === 1) {
+      // create exactly one card from shuffled array
+      const imgFilename = cards[cardIdx++];
       const card = document.createElement("div");
       card.className = "card";
       card.textContent = "💌";
 
-      card.onclick = () => {
+      card.addEventListener("click", () => {
         if (flipped.length === 2 || card.classList.contains("matched")) return;
 
-        card.innerHTML = `<img src="${img}">`;
-        flipped.push({ card, img });
+        card.innerHTML = `<img src="${imgFilename}" />`;
+        flipped.push({ card, imgFilename });
 
         if (flipped.length === 2) {
-          if (flipped[0].img === flipped[1].img) {
-            flipped.forEach(c => c.card.classList.add("matched"));
+          const [a, b] = flipped;
+          if (a.imgFilename === b.imgFilename) {
+            flipped.forEach(x => x.card.classList.add("matched"));
             matched++;
             flipped = [];
 
             if (matched === images.length) {
-              document.getElementById("game").style.display = "none";
-              document.getElementById("final").style.display = "flex";
+              setTimeout(() => {
+                document.getElementById("game").style.display = "none";
+                document.getElementById("final").style.display = "flex";
+              }, 600);
             }
           } else {
             setTimeout(() => {
-              flipped.forEach(c => c.card.textContent = "💌");
+              flipped.forEach(x => (x.card.textContent = "💌"));
               flipped = [];
             }, 800);
           }
         }
-      };
+      });
 
       grid.appendChild(card);
+    } else {
+      // add invisible spacer so layout stays correct
+      const spacer = document.createElement("div");
+      spacer.style.visibility = "hidden";
+      grid.appendChild(spacer);
     }
-  });
+  }
 
-  console.log("Cards created:", cardIndex);
+  console.log("Cards placed:", cardIdx);
 </script>
