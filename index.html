@@ -24,7 +24,7 @@
 
   .heart-grid {
     display: grid;
-    grid-template-columns: repeat(10, 70px);
+    grid-template-columns: repeat(7, 70px);
     grid-template-rows: repeat(6, 90px);
     gap: 8px;
     justify-content: center;
@@ -98,12 +98,12 @@
 
   // Heart shape map (1 = card, 0 = empty)
   const heartMap = [
-  0,1,1,0,1,1,0,1,1,0,
-  1,1,1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,1,1,
-  0,1,1,1,1,1,1,1,1,0,
-  0,0,1,1,1,1,1,1,0,0,
-  0,0,0,1,1,1,1,0,0,0
+  0,1,1,0,1,1,0,   // 4
+  1,1,1,1,1,1,1,   // 7  (11)
+  1,1,1,1,1,1,1,   // 7  (18)
+  1,1,1,1,1,1,1,   // 7  (25)
+  0,1,1,1,1,1,0,   // 5  (30)
+  0,1,1,1,1,1,0    // 6  (36) ✅
 ];
 
   const grid = document.getElementById("grid");
@@ -156,5 +156,6 @@
 
 </body>
 </html>
+
 
 
