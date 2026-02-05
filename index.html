@@ -1,68 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Valentine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffe6eb;
+    font-family: Arial, sans-serif;
+  }
+
+  #game {
+    text-align: center;
+  }
+
+  .heart-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 70px);
+    grid-template-rows: repeat(6, 90px);
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .card {
+    width: 70px;
+    height: 90px;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="game">
+  <h2>Match all pairs ❤️</h2>
+  <div id="grid" class="heart-grid"></div>
+</div>
+
 <script>
-  // card image filenames
+  // SAFETY CHECK
+  const grid = document.getElementById("grid");
+  if (!grid) {
+    alert("Grid not found. HTML is broken.");
+    throw new Error("Grid missing");
+  }
+
   const images = Array.from({ length: 18 }, (_, i) => `${i + 1}.jpeg`);
   const cards = [...images, ...images].sort(() => Math.random() - 0.5);
 
-  // heart pattern — this array must have >36 ones OR include zero placeholders
   const heartMap = [
     0,1,1,0,1,1,0,
     1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,
     0,1,1,1,1,1,0,
-    0,0,1,1,1,0,0
-  ];
+    0,1,1,1,1,1,0
+  ]; // EXACTLY 36
 
-  const grid = document.getElementById("grid");
+  let cardIndex = 0;
   let flipped = [];
-  let matched = 0;
 
-  // only put card where heartMap[i] is 1
-  let cardIdx = 0;
-  for (let i = 0; i < heartMap.length; i++) {
-    if (heartMap[i] === 1) {
-      // create exactly one card from shuffled array
-      const imgFilename = cards[cardIdx++];
-      const card = document.createElement("div");
-      card.className = "card";
-      card.textContent = "💌";
-
-      card.addEventListener("click", () => {
-        if (flipped.length === 2 || card.classList.contains("matched")) return;
-
-        card.innerHTML = `<img src="${imgFilename}" />`;
-        flipped.push({ card, imgFilename });
-
-        if (flipped.length === 2) {
-          const [a, b] = flipped;
-          if (a.imgFilename === b.imgFilename) {
-            flipped.forEach(x => x.card.classList.add("matched"));
-            matched++;
-            flipped = [];
-
-            if (matched === images.length) {
-              setTimeout(() => {
-                document.getElementById("game").style.display = "none";
-                document.getElementById("final").style.display = "flex";
-              }, 600);
-            }
-          } else {
-            setTimeout(() => {
-              flipped.forEach(x => (x.card.textContent = "💌"));
-              flipped = [];
-            }, 800);
-          }
-        }
-      });
-
-      grid.appendChild(card);
-    } else {
-      // add invisible spacer so layout stays correct
+  heartMap.forEach(cell => {
+    if (cell === 0) {
       const spacer = document.createElement("div");
       spacer.style.visibility = "hidden";
       grid.appendChild(spacer);
+      return;
     }
-  }
 
-  console.log("Cards placed:", cardIdx);
+    const img = cards[cardIndex++];
+    const card = document.createElement("div");
+    card.className = "card";
+    card.textContent = "💌";
+
+    card.onclick = () => {
+      if (flipped.length === 2 || card.classList.contains("done")) return;
+
+      card.innerHTML = `<img src="${img}">`;
+      flipped.push(card);
+
+      if (flipped.length === 2) {
+        const [a, b] = flipped;
+        if (a.innerHTML === b.innerHTML) {
+          a.classList.add("done");
+          b.classList.add("done");
+          flipped = [];
+        } else {
+          setTimeout(() => {
+            a.textContent = "💌";
+            b.textContent = "💌";
+            flipped = [];
+          }, 800);
+        }
+      }
+    };
+
+    grid.appendChild(card);
+  });
+
+  console.log("Cards rendered:", cardIndex);
 </script>
+
+</body>
+</html>
