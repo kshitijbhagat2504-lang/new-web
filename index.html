@@ -108,32 +108,7 @@ button {
 
 <body>
 
-<!-- PAGE 1 -->
-<div id="game" class="wrapper">
-  <div class="side left">Pair the photos</div>
-  <div class="side right">to reveal a surprise</div>
-  <div class="heart" id="heart"></div>
-</div>
-
-<!-- BLACK SCREEN -->
-<div id="black" class="hidden">
-  <div class="center">
-    took you long enough.<br>now, for your final test
-  </div>
-</div>
-
-<!-- QUESTION -->
-<div id="question" class="hidden">
-  <h1>Will you be my Valentine?</h1>
-  <img src="final.gif" width="220">
-  <div>
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
-  </div>
-</div>
-
-<script>
-/* ---------- MATCHING GAME ---------- */
+  /* ---------- MATCHING GAME ---------- */
 const layout = [
 ". . X X . X X . .",
 ". X X X X X X X .",
@@ -183,6 +158,32 @@ function endGame(){
     },2500);
   },2000);
 }
+
+<!-- PAGE 1 -->
+<div id="game" class="wrapper">
+  <div class="side left">Pair the photos</div>
+  <div class="side right">to reveal a surprise</div>
+  <div class="heart" id="heart"></div>
+</div>
+
+<!-- BLACK SCREEN -->
+<div id="black" class="hidden">
+  <div class="center">
+    took you long enough.<br>now, for your final test
+  </div>
+</div>
+
+<!-- QUESTION -->
+<div id="question" class="hidden">
+  <h1>Will you be my Valentine?</h1>
+  <img src="final.gif" width="220">
+  <div>
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
+</div>
+
+<script>
 
 /* ---------- NO BUTTON (EMOTES + MATCHED AUDIO) ---------- */
 const no=document.getElementById("no");
@@ -235,3 +236,4 @@ document.getElementById("yes").onclick=()=>{
 
 </body>
 </html>
+
