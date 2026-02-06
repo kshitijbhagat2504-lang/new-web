@@ -1,19 +1,4 @@
 <!DOCTYPE html>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const game = document.getElementById("game");
-  const black = document.getElementById("black");
-  const question = document.getElementById("question");
-
-  black.classList.add("hidden");
-  question.classList.add("hidden");
-  game.classList.remove("hidden");
-
-// force correct initial state
-black.classList.add("hidden");
-question.classList.add("hidden");
-game.classList.remove("hidden");
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -29,7 +14,6 @@ body {
 }
 
 /* ---------- COMMON ---------- */
-.hidden { display:none; }
 .center {
   position:absolute;
   top:50%;
@@ -39,12 +23,13 @@ body {
   color:white;
   font-size:32px;
 }
+
 .fadeOut {
   animation: fadeOut 2s forwards;
 }
 @keyframes fadeOut { to { opacity:0; } }
 
-/* ---------- PAGE 1 : GAME ---------- */
+/* ---------- GAME ---------- */
 .wrapper {
   position:relative;
   display:flex;
@@ -55,229 +40,4 @@ body {
 
 .side {
   position:absolute;
-  bottom:20px;
-  font-size:20px;
-  color:#b3005e;
-  font-weight:600;
-}
-.left { left:20px; }
-.right { right:20px; }
-
-.heart {
-  display:grid;
-  grid-template-columns:repeat(9, minmax(40px, 8vw));
-  grid-auto-rows:minmax(50px, 10vw);
-  gap:6px;
-}
-
-.card {
-  background:white;
-  border-radius:14px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-  font-size:28px;
-}
-.card img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:14px;
-}
-.empty { visibility:hidden; }
-
-/* ---------- BLACK SCREEN ---------- */
-#black {
-  background:black;
-  position:fixed;
-  inset:0;
-  z-index:10;
-}
-
-/* ---------- QUESTION PAGE ---------- */
-#question {
-  background:#ffe6eb;
-  position:fixed;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:20;
-}
-
-button {
-  font-size:20px;
-  padding:12px 28px;
-  margin:10px;
-  cursor:pointer;
-}
-
-/* ---------- EMOTES ---------- */
-.emote {
-  position:absolute;
-  width:90px;
-  pointer-events:none;
-}
-.top-left { top:20px; left:20px; }
-.top-right { top:20px; right:20px; }
-.bottom-center {
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-}
-</style>
-</head>
-
-<body>
-
-<!-- PAGE 1 -->
-<div id="game" class="wrapper">
-  <div class="side left">Pair the photos</div>
-  <div class="side right">to reveal a surprise</div>
-  <div class="heart" id="heart"></div>
-</div>
-
-<!-- BLACK SCREEN -->
-<div id="black" class="hidden">
-  <div class="center">
-    took you long enough.<br>
-    now, for your final test
-  </div>
-</div>
-
-<!-- QUESTION -->
-<div id="question" class="hidden">
-  <h1>Will you be my Valentine?</h1>
-  <img src="gifs/final.gif" width="220">
-  <div>
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
-  </div>
-</div>
-
-<script>
-/* ---------- HEART LAYOUT ---------- */
-const layout = [
-". . X X . X X . .",
-". X X X X X X X .",
-"X X X X X X X X X",
-". X X X X X X X .",
-". . X X X X X . .",
-". . . X X X . . .",
-". . . . X . . . ."
-];
-
-const imgs = [...Array(18)].map((_,i)=>`images/${i+1}.jpeg`);
-const deck = [...imgs, ...imgs].sort(()=>Math.random()-0.5);
-
-let open=[], matched=0, idx=0;
-const heart=document.getElementById("heart");
-
-layout.join(" ").split(" ").forEach(c=>{
-  if(c==="."){ heart.innerHTML+='<div class="empty"></div>'; return; }
-  const d=document.createElement("div");
-  d.className="card";
-  d.textContent="💌";
-  d.dataset.img=deck[idx++];
-  d.onclick=()=>{
-    if(open.length===2 || d.classList.contains("done")) return;
-    d.innerHTML=`<img src="${d.dataset.img}">`;
-    open.push(d);
-    if(open.length===2){
-      if(open[0].dataset.img===open[1].dataset.img){
-        open.forEach(x=>x.classList.add("done"));
-        open=[];
-        matched++;
-        if(matched===18) endGame();
-      } else {
-        setTimeout(()=>{
-          open.forEach(x=>x.textContent="💌");
-          open=[];
-        },800);
-      }
-    }
-  };
-  heart.appendChild(d);
-});
-
-/* ---------- TRANSITIONS ---------- */
-function endGame(){
-  game.classList.add("fadeOut");
-  setTimeout(()=>{
-    game.classList.add("hidden");
-    black.classList.remove("hidden");
-    setTimeout(()=>{
-      black.classList.add("fadeOut");
-      setTimeout(()=>{
-        black.classList.add("hidden");
-        question.classList.remove("hidden");
-      },2000);
-    },2500);
-  },2000);
-}
-
-/* ---------- NO BUTTON EMOTES ---------- */
-const no=document.getElementById("no");
-
-const emotes=[
-  "emotes/king_laugh.mp4",
-  "emotes/goblin_boohoo.mp4",
-  "emotes/goblin_confused.mp4",
-  "emotes/skeleton_cry.mp4",
-  "emotes/hog_thinking.mp4",
-  "emotes/goblin_facepalm.mp4",
-  "emotes/princess_yawn.mp4"
-];
-
-function spawnEmote(x,y,src){
-  const v=document.createElement("video");
-  v.src=src;
-  v.autoplay=true;
-  v.muted=false;
-  v.loop=false;
-  v.className="emote";
-  v.style.left=x+"px";
-  v.style.top=y+"px";
-  document.body.appendChild(v);
-  setTimeout(()=>v.remove(),1500);
-}
-
-function moveNo(){
-  const x=Math.random()*(window.innerWidth-120);
-  const y=Math.random()*(window.innerHeight-120);
-  no.style.position="absolute";
-  no.style.left=x+"px";
-  no.style.top=y+"px";
-  const src=emotes[Math.floor(Math.random()*emotes.length)];
-  spawnEmote(x,y,src);
-}
-
-no.onmouseenter=moveNo;
-no.onclick=moveNo;
-no.addEventListener("touchstart", moveNo);
-
-/* ---------- YES ---------- */
-document.getElementById("yes").onclick=()=>{
-  question.innerHTML=`
-    <img src="emotes/kiss_princess.png" class="emote top-left">
-    <img src="emotes/kiss_goblin.png" class="emote top-right">
-    <img src="emotes/happy_goblin.png" class="emote bottom-center">
-    <h1 style="
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      text-align:center;
-    ">
-      Thank you for accepting me, ILOVEYOU
-    </h1>
-    <img src="gifs/confetti.gif">
-  `;
-});
-</script>
-
-</body>
-</html>
-
+  bottom
