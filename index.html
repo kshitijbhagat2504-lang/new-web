@@ -1,123 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>❤️</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+  overflow: hidden;
+}
 
-  .heart {
-    display: grid;
-    grid-template-columns: repeat(9, 80px);
-    grid-auto-rows: 100px;
-    gap: 10px;
-  }
+.hidden { display:none; }
 
-  .heart img {
-    width: 80px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 14px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-  }
+.fade { animation: fade 2s forwards; }
+@keyframes fade { to { opacity:0; } }
 
-  .empty {
-    visibility: hidden;
-  }
+.center {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:white;
+  font-size:32px;
+}
+
+.wrapper {
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.side {
+  position:absolute;
+  bottom:20px;
+  font-size:20px;
+  color:#b3005e;
+  font-weight:600;
+}
+
+.left { left:20px; }
+.right { right:20px; }
+
+.heart {
+  display:grid;
+  grid-template-columns:repeat(9,80px);
+  grid-auto-rows:100px;
+  gap:10px;
+}
+
+.card {
+  background:white;
+  border-radius:14px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  font-size:28px;
+}
+
+.card img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:14px;
+}
+
+.empty { visibility:hidden; }
+
+#black {
+  background:black;
+  position:fixed;
+  inset:0;
+}
+
+#question {
+  background:#ffe6eb;
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+button {
+  font-size:20px;
+  padding:12px 28px;
+  margin:10px;
+  cursor:pointer;
+}
+
+.emote {
+  position:absolute;
+  width:80px;
+}
+.top-left { top:20px; left:20px; }
+.top-right { top:20px; right:20px; }
+.bottom-center { bottom:20px; left:50%; transform:translateX(-50%); }
 </style>
 </head>
 
 <body>
 
-<div class="heart">
-
-  <!-- Row 1: . . X X . X X . . -->
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <img src="1.jpeg">
-  <img src="2.jpeg">
-  <div class="empty"></div>
-  <img src="3.jpeg">
-  <img src="4.jpeg">
-  <div class="empty"></div>
-  <div class="empty"></div>
-
-  <!-- Row 2: . X X X X X X X . -->
-  <div class="empty"></div>
-  <img src="5.jpeg">
-  <img src="6.jpeg">
-  <img src="7.jpeg">
-  <img src="8.jpeg">
-  <img src="9.jpeg">
-  <img src="10.jpeg">
-  <img src="11.jpeg">
-  <div class="empty"></div>
-
-  <!-- Row 3: X X X X X X X X X -->
-  <img src="12.jpeg">
-  <img src="13.jpeg">
-  <img src="14.jpeg">
-  <img src="15.jpeg">
-  <img src="16.jpeg">
-  <img src="17.jpeg">
-  <img src="18.jpeg">
-  <img src="1.jpeg">
-  <img src="2.jpeg">
-
-  <!-- Row 4: . X X X X X X X . -->
-  <div class="empty"></div>
-  <img src="3.jpeg">
-  <img src="4.jpeg">
-  <img src="5.jpeg">
-  <img src="6.jpeg">
-  <img src="7.jpeg">
-  <img src="8.jpeg">
-  <img src="9.jpeg">
-  <div class="empty"></div>
-
-  <!-- Row 5: . . X X X X X . . -->
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <img src="10.jpeg">
-  <img src="11.jpeg">
-  <img src="12.jpeg">
-  <img src="13.jpeg">
-  <img src="14.jpeg">
-  <div class="empty"></div>
-  <div class="empty"></div>
-
-  <!-- Row 6: . . . X X X . . . -->
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <img src="15.jpeg">
-  <img src="16.jpeg">
-  <img src="17.jpeg">
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <div class="empty"></div>
-
-  <!-- Row 7: . . . . X . . . . -->
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <img src="18.jpeg">
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <div class="empty"></div>
-  <div class="empty"></div>
-
+<!-- PAGE 1 -->
+<div id="game" class="wrapper">
+  <div class="side left">Pair the photos</div>
+  <div class="side right">to reveal a surprise</div>
+  <div class="heart" id="heart"></div>
 </div>
+
+<!-- BLACK SCREEN -->
+<div id="black" class="hidden">
+  <div class="center">
+    took you long enough.<br>now, for your final test
+  </div>
+</div>
+
+<!-- QUESTION -->
+<div id="question" class="hidden">
+  <h1>Will you be my Valentine?</h1>
+  <img src="final.gif" width="220">
+  <div>
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
+</div>
+
+<script>
+/* ---------- MATCHING GAME ---------- */
+const layout = [
+". . X X . X X . .",
+". X X X X X X X .",
+"X X X X X X X X X",
+". X X X X X X X .",
+". . X X X X X . .",
+". . . X X X . . .",
+". . . . X . . . ."
+];
+
+const imgs = [...Array(18)].map((_,i)=>`${i+1}.jpeg`);
+const deck = [...imgs,...imgs].sort(()=>Math.random()-0.5);
+let idx=0, open=[], matched=0;
+
+layout.join(" ").split(" ").forEach(c=>{
+  const h=document.getElementById("heart");
+  if(c==="."){h.innerHTML+='<div class="empty"></div>';return;}
+  const d=document.createElement("div");
+  d.className="card";
+  d.textContent="💌";
+  d.dataset.img=deck[idx++];
+  d.onclick=()=>{
+    if(open.length===2||d.classList.contains("done"))return;
+    d.innerHTML=`<img src="${d.dataset.img}">`;
+    open.push(d);
+    if(open.length===2){
+      if(open[0].dataset.img===open[1].dataset.img){
+        open.forEach(x=>x.classList.add("done"));
+        matched++; open=[];
+        if(matched===18) endGame();
+      } else {
+        setTimeout(()=>{open.forEach(x=>x.textContent="💌");open=[];},800);
+      }
+    }
+  };
+  h.appendChild(d);
+});
+
+function endGame(){
+  document.getElementById("game").classList.add("fade");
+  setTimeout(()=>{
+    game.classList.add("hidden");
+    black.classList.remove("hidden");
+    setTimeout(()=>{
+      black.classList.add("hidden");
+      question.classList.remove("hidden");
+    },2500);
+  },2000);
+}
+
+/* ---------- NO BUTTON (EMOTES + MATCHED AUDIO) ---------- */
+const no=document.getElementById("no");
+
+const emotes=[
+  {img:"emote_laugh.png", sound:"emote_laugh.mp3"},
+  {img:"emote_boohoo.png", sound:"emote_boohoo.mp3"},
+  {img:"emote_confused.png", sound:"emote_confused.mp3"},
+  {img:"emote_crying.png", sound:"emote_crying.mp3"},
+  {img:"emote_hogthinking.png", sound:"emote_hogthinking.mp3"},
+  {img:"emote_facepalm.png", sound:"emote_facepalm.mp3"},
+  {img:"emote_yawn.png", sound:"emote_yawn.mp3"}
+];
+
+function moveNo(){
+  no.style.position="absolute";
+  no.style.left=Math.random()*80+"%";
+  no.style.top=Math.random()*80+"%";
+
+  const eData=emotes[Math.floor(Math.random()*emotes.length)];
+  const e=document.createElement("img");
+  e.src=eData.img;
+  e.className="emote";
+  e.style.left=no.style.left;
+  e.style.top=no.style.top;
+  document.body.appendChild(e);
+
+  const audio=new Audio(eData.sound);
+  audio.play();
+
+  setTimeout(()=>e.remove(),1000);
+}
+
+no.onmouseenter=moveNo;
+no.onclick=moveNo;
+
+/* ---------- YES ---------- */
+document.getElementById("yes").onclick=()=>{
+  question.innerHTML=`
+    <img src="emote_kiss_goblin.png" class="emote top-left">
+    <img src="emote_kiss_princess.png" class="emote top-right">
+    <img src="emote_happy_goblin.png" class="emote bottom-center">
+    <h1 style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
+      Thank you for accepting me, ILOVEYOU
+    </h1>
+    <img src="confetti.gif">
+  `;
+};
+</script>
 
 </body>
 </html>
