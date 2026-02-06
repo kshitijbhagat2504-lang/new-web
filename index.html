@@ -10,10 +10,10 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg,#ff9a9e,#fad0c4);
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-/* ---------- COMMON ---------- */
+/* ---------- CENTER TEXT ---------- */
 .center {
   position:absolute;
   top:50%;
@@ -24,9 +24,8 @@ body {
   font-size:32px;
 }
 
-.fadeOut {
-  animation: fadeOut 2s forwards;
-}
+/* ---------- FADE ---------- */
+.fadeOut { animation: fadeOut 2s forwards; }
 @keyframes fadeOut { to { opacity:0; } }
 
 /* ---------- GAME ---------- */
@@ -48,10 +47,11 @@ body {
 .left { left:20px; }
 .right { right:20px; }
 
+/* HEART SIZE FIX */
 .heart {
   display:grid;
-  grid-template-columns:repeat(9, minmax(40px, 8vw));
-  grid-auto-rows:minmax(50px, 10vw);
+  grid-template-columns:repeat(9, minmax(36px, 6vw));
+  grid-auto-rows:minmax(36px, 6vw);
   gap:6px;
 }
 
@@ -62,7 +62,7 @@ body {
   justify-content:center;
   align-items:center;
   cursor:pointer;
-  font-size:28px;
+  font-size:26px;
 }
 
 .card img {
@@ -127,7 +127,7 @@ button {
   <div class="heart" id="heart"></div>
 </div>
 
-<!-- BLACK SCREEN -->
+<!-- BLACK -->
 <div id="black">
   <div class="center">
     took you long enough.<br>
@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const game = document.getElementById("game");
 const black = document.getElementById("black");
 const question = document.getElementById("question");
+const heart = document.getElementById("heart");
 
 /* ---------- HEART GAME ---------- */
 const layout = [
@@ -167,20 +168,26 @@ const imgs = [...Array(18)].map((_,i)=>`images/${i+1}.jpeg`);
 const deck = [...imgs, ...imgs].sort(()=>Math.random()-0.5);
 
 let open=[], matched=0, idx=0;
-const heart=document.getElementById("heart");
 
 layout.join(" ").split(" ").forEach(c=>{
-  if(c==="."){ heart.innerHTML+='<div class="empty"></div>'; return; }
+  if(c==="."){
+    heart.appendChild(Object.assign(document.createElement("div"), {className:"empty"}));
+    return;
+  }
+
   const d=document.createElement("div");
   d.className="card";
   d.textContent="💌";
   d.dataset.img=deck[idx++];
+
   d.onclick=()=>{
     if(open.length===2 || d.classList.contains("done")) return;
-    d.innerHTML=`<img src="${d.dataset.img}">`;
+
+    d.innerHTML = `<img src="${d.dataset.img}" onerror="this.style.display='none'">`;
     open.push(d);
+
     if(open.length===2){
-      if(open[0].dataset.img===open[1].dataset.img){
+      if(open[0].dataset.img === open[1].dataset.img){
         open.forEach(x=>x.classList.add("done"));
         open=[];
         matched++;
@@ -193,6 +200,7 @@ layout.join(" ").split(" ").forEach(c=>{
       }
     }
   };
+
   heart.appendChild(d);
 });
 
@@ -225,25 +233,19 @@ const emotes=[
   "emotes/princess_yawn.mp4"
 ];
 
-function spawnEmote(x, y, src) {
-  const v = document.createElement("video");
-  v.src = src;
-  v.autoplay = true;
-  v.muted = true;        // required for autoplay
-  v.playsInline = true;
-  v.className = "emote";
-  v.style.left = x + "px";
-  v.style.top = y + "px";
-
+function spawnEmote(x,y,src){
+  const v=document.createElement("video");
+  v.src=src;
+  v.autoplay=true;
+  v.muted=true;
+  v.playsInline=true;
+  v.className="emote";
+  v.style.left=x+"px";
+  v.style.top=y+"px";
   document.body.appendChild(v);
-
-  v.onloadeddata = () => {
-    v.muted = false;     // unmute after playback starts
-  };
-
-  setTimeout(() => v.remove(), 1500);
+  v.onloadeddata=()=>v.muted=false;
+  setTimeout(()=>v.remove(),1500);
 }
-
 
 function moveNo(){
   const x=Math.random()*(window.innerWidth-120);
@@ -264,13 +266,7 @@ document.getElementById("yes").onclick=()=>{
     <img src="emotes/kiss_princess.png" class="emote top-left">
     <img src="emotes/kiss_goblin.png" class="emote top-right">
     <img src="emotes/happy_goblin.png" class="emote bottom-center">
-    <h1 style="
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      text-align:center;
-    ">
+    <h1 style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
       Thank you for accepting me, ILOVEYOU
     </h1>
     <img src="gifs/confetti.gif">
